@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Napas — seberapa kotor udara di daerahmu?</title>
+    <meta
+      name="description"
+      content="Rata-rata partikel halus PM2.5 di 514 kabupaten/kota Indonesia, 1998–2024, dari data satelit yang dikalibrasi alat ukur darat. Bandingkan dengan pedoman WHO dan baku mutu nasional, lihat musim asap tiap tahun."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://napas.raffstw.my.id/" />
+    <meta property="og:title" content="Napas — seberapa kotor udara di daerahmu?" />
+    <meta property="og:description" content="Tidak ada satu pun kabupaten/kota di Indonesia yang udaranya memenuhi pedoman WHO pada 2024. Cek daerahmu." />
+    <meta property="og:image" content="https://napas.raffstw.my.id/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://napas.raffstw.my.id/" />
+    <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16171a" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/ikon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="kepala">
+      <a class="merek" href="#"><i aria-hidden="true"><b></b><b></b><b></b></i>Napas</a>
+      <nav aria-label="Bagian halaman">
+        <a href="#peta">Peta</a>
+        <a href="#asap">Musim asap</a>
+        <a href="#kota">Kota besar</a>
+        <a href="#metode">Metode</a>
+      </nav>
+    </header>
+
+    <main>
+      <section aria-labelledby="judul">
+        <div class="pembuka"><div>
+        <h1 id="judul">Tidak ada satu pun kabupaten/kota di Indonesia yang udaranya memenuhi pedoman WHO.</h1>
+        <p class="lead" id="lead">
+          Rata-rata partikel halus PM2.5 tahun 2024 di 514 kabupaten/kota, dihitung dari data satelit yang dikalibrasi alat ukur darat, 1998–2024. Bagaimana di
+          daerahmu?
+        </p>
+        <div class="cari" role="search">
+          <label class="tersembunyi" for="kotak-cari">Cari kabupaten atau kota</label>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
+          <input
+            id="kotak-cari"
+            type="search"
+            placeholder="Ketik nama kabupaten/kota"
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-controls="saran"
+            aria-autocomplete="list"
+          />
+          <ul class="saran" id="saran" role="listbox" hidden></ul>
+        </div>
+        <ul class="pintasan" id="pintasan" aria-label="Contoh daerah"></ul>
+        </div>
+        <figure>
+          <div id="peta-mini"></div>
+          <figcaption>Peta 2024. Makin gelap, makin kotor. Arahkan kursor untuk melihat angkanya, klik untuk membuka daerahnya.</figcaption>
+        </figure>
+        </div>
+
+        <article class="daerah" id="daerah" hidden aria-live="polite"></article>
+      </section>
+
+      <section class="bagian" id="peta" aria-labelledby="judul-peta">
+        <h2 id="judul-peta">Dari tahun ke tahun, peta makin gelap</h2>
+        <p class="teks" id="teks-peta"></p>
+        <div class="kendali">
+          <button type="button" class="tombol-putar" id="putar"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" /></svg><span>Putar 1998–2024</span></button>
+          <div class="penggeser">
+            <label class="tersembunyi" for="tahun">Tahun</label>
+            <input type="range" id="tahun" min="1998" max="2024" step="1" value="2024" />
+            <output id="label-tahun" for="tahun">2024</output>
+          </div>
+        </div>
+        <ul class="legenda" id="legenda" aria-label="Kelas rata-rata PM2.5 (µg/m³)"></ul>
+        <div class="wadah-peta" id="wadah-peta"></div>
+        <p class="ringkas-peta" id="ringkas-peta"></p>
+        <details class="tabel-peta">
+          <summary>Lihat semua 514 daerah sebagai tabel</summary>
+          <div class="gulir-tabel"><table id="tabel"></table></div>
+        </details>
+      </section>
+
+      <section class="bagian cerita" id="asap" aria-labelledby="judul-asap">
+        <div>
+          <h2 id="judul-asap">Musim asap datang hampir tiap kali kemarau panjang</h2>
+          <p class="teks" id="teks-asap"></p>
+        </div>
+        <div>
+          <p class="judul-grafik">Berapa kali sebuah daerah mengalami bulan dengan rata-rata di atas 75 µg/m³</p>
+          <p class="ket-grafik">Jumlah daerah-bulan per tahun, dari 514 kabupaten/kota</p>
+          <div id="grafik-asap"></div>
+        </div>
+      </section>
+
+      <section class="bagian cerita" id="kota" aria-labelledby="judul-kota">
+        <div>
+          <h2 id="judul-kota">Kota besar paling cepat keruh</h2>
+          <p class="teks" id="teks-kota"></p>
+        </div>
+        <div>
+          <p class="judul-grafik">Kenaikan terbesar rata-rata PM2.5, 1998 ke 2024 (µg/m³)</p>
+          <ul class="kunci" aria-hidden="true">
+            <li><i class="garis-kunci" style="background: var(--k1); height: 10px; width: 10px; border-radius: 50%"></i>1998</li>
+            <li><i class="garis-kunci" style="background: var(--k5); height: 10px; width: 10px; border-radius: 50%"></i>2024</li>
+          </ul>
+          <div id="grafik-kota"></div>
+        </div>
+      </section>
+
+      <section class="bagian" id="metode" aria-labelledby="judul-metode">
+        <h2 id="judul-metode">Dari mana angkanya</h2>
+        <div class="teks">
+          <p>
+            Data PM2.5 dari <a href="https://www.satpm.org/v6-gl-03">ACAG, Washington University in St. Louis</a> versi V6.GL.03 (Shen dkk., 2024, <i>ACS ES&amp;T Air</i>; sebaran debu diperbarui Zhang dkk., 2025), lisensi CC BY 4.0.
+            Kelompok riset ini menggabungkan pengamatan satelit atas aerosol, model kimia atmosfer GEOS-Chem, dan pengukuran alat di darat lewat jaringan saraf,
+            menjadi perkiraan rata-rata bulanan dan tahunan di permukaan dengan petak sekitar 11 km (0,1°).
+          </p>
+          <p>
+            Nilai tiap kabupaten/kota adalah rata-rata petak-petak yang mengiris batas wilayahnya, ditimbang dengan luas irisan. Batas wilayah dari
+            <a href="https://www.geoboundaries.org">geoBoundaries</a> (BPS, OCHA). Petak laut dikeluarkan.
+          </p>
+          <p>
+            Angka ini perkiraan rata-rata, bukan pengukuran langsung. Data bulanan dan tahunan tidak menangkap lonjakan harian, jadi tidak bisa dipakai untuk
+            menghitung "hari tidak sehat". Data tahun-tahun awal memakai lebih sedikit satelit, jadi tren jangka panjang sebaiknya dibaca sebagai arah, bukan angka
+            pasti. Pembanding: pedoman WHO 2021 untuk rata-rata tahunan 5 µg/m³ (dengan target antara 10, 15, 25, 35), dan baku mutu udara ambien Indonesia
+            15 µg/m³ per tahun (PP 22/2021).
+          </p>
+          <p>
+            Tambahan harapan hidup memakai rumus <a href="https://aqli.epic.uchicago.edu">Air Quality Life Index</a> (EPIC, University of Chicago): 0,98 tahun
+            untuk tiap 10 µg/m³ yang diturunkan sampai pedoman WHO. Ini perkiraan rata-rata penduduk, bukan ramalan untuk perorangan.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="kaki">
+      <p>Dibikin sama <a href="https://www.raffstw.my.id">Rafi</a>. Kode dan skrip pengolah data terbuka di <a href="https://github.com/Reverseflash45/napas">GitHub</a>.</p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "napas",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource-variable/ibm-plex-sans": "^5.2.6",
+    "d3-geo": "^3.1.1",
+    "topojson-client": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/d3-geo": "^3.1.0",
+    "@types/node": "^26.6.5",
+    "@types/topojson-client": "^3.1.5",
+    "typescript": "~5.9",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}
