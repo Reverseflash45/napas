@@ -1,34 +1,13 @@
 /* Peta pilihan warna 514 kabupaten/kota (SVG, d3-geo). */
 import type { Feature, FeatureCollection, Geometry } from "geojson";
-import { type GeoProjection, geoMercator, geoPath, geoTransform } from "d3-geo";
+import { geoMercator } from "d3-geo";
+import { jalurDatar, titikSudut } from "./datar";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
 import { warnaKelas, sembunyikanTip, tampilkanTip } from "./grafik";
 import { angka1, kelasDari } from "./inti";
 
 type Prop = { id: string };
-
-/** Semua titik sudut poligon; cukup untuk memaskan proyeksi tanpa menjalankan seluruh jalur d3. */
-function titikSudut(fc: FeatureCollection<Geometry, Prop>): [number, number][] {
-  const hasil: [number, number][] = [];
-  for (const f of fc.features) {
-    const g = f.geometry;
-    const poligon = g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
-    for (const p of poligon) for (const r of p) for (const t of r) hasil.push(t as [number, number]);
-  }
-  return hasil;
-}
-
-/** Mercator tanpa pemotongan bola dan resampling d3. Indonesia tidak melintasi antimeridian dan titiknya
- * rapat, jadi hasilnya sama, tetapi path digambar beberapa kali lebih cepat. */
-function proyeksiDatar(p: GeoProjection) {
-  return geoTransform({
-    point(x, y) {
-      const [px, py] = p([x, y])!;
-      this.stream.point(px, py);
-    },
-  });
-}
 
 export type Peta = {
   warnai: (nilai: (id: string) => number | null) => void;
@@ -51,9 +30,9 @@ export function buatPeta(
       [4, 4],
       [W - 4, H - 4],
     ],
-    { type: "MultiPoint", coordinates: titikSudut(fc) },
+    titikSudut(fc),
   );
-  const jalur = geoPath(proyeksiDatar(proyeksi)).digits(1);
+  const jalur = jalurDatar(proyeksi).digits(1);
   const NS = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(NS, "svg");
   svg.setAttribute("class", "peta");
