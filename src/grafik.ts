@@ -54,7 +54,8 @@ export function garisTren(wadah: HTMLElement, tahun: number[], daerah: (number |
   const atas = Math.ceil(maks / step) * step;
   const x = (i: number) => m.l + (i / (tahun.length - 1)) * (W - m.l - m.r);
   const y = (v: number) => H - m.b - (v / atas) * (H - m.t - m.b);
-  const svg = el("svg", { class: "grafik", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `Rata-rata PM2.5 tahunan ${namaDaerah} dan median nasional, ${tahun[0]}–${tahun.at(-1)}` });
+  // group, bukan img: di dalamnya ada penggeser yang bisa difokus
+  const svg = el("svg", { class: "grafik", viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": `Rata-rata PM2.5 tahunan ${namaDaerah} dan median nasional, ${tahun[0]}–${tahun.at(-1)}` });
   for (let v = 0; v <= atas + 1e-9; v += step) {
     svg.append(el("line", { class: v === 0 ? "sumbu-garis" : "kisi", x1: m.l, x2: W - m.r, y1: y(v), y2: y(v) }));
     svg.append(el("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end" }, String(v)));
@@ -86,7 +87,19 @@ export function garisTren(wadah: HTMLElement, tahun: number[], daerah: (number |
   // garis silang + tooltip: menunjuk tahun terdekat
   const silang = el("line", { class: "silang", y1: m.t, y2: H - m.b, visibility: "hidden" });
   svg.append(silang);
-  const area = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent", tabindex: 0, "aria-label": "Geser untuk melihat nilai per tahun" });
+  const area = el("rect", {
+    x: m.l,
+    y: m.t,
+    width: W - m.l - m.r,
+    height: H - m.t - m.b,
+    fill: "transparent",
+    tabindex: 0,
+    role: "slider",
+    "aria-label": "Tahun (geser dengan panah kiri dan kanan)",
+    "aria-valuemin": tahun[0],
+    "aria-valuemax": tahun.at(-1)!,
+    "aria-valuenow": tahun.at(-1)!,
+  });
   svg.append(area);
   let fokusI = tahun.length - 1;
   const tunjuk = (i: number, cx: number, cy: number) => {
@@ -96,6 +109,8 @@ export function garisTren(wadah: HTMLElement, tahun: number[], daerah: (number |
     silang.setAttribute("visibility", "visible");
     const v = daerah[i];
     const md = median[i];
+    area.setAttribute("aria-valuenow", String(tahun[i]));
+    area.setAttribute("aria-valuetext", `${tahun[i]}: ${v === null ? "tidak ada data" : `${angka1(v)} µg/m³`}, median nasional ${md === null ? "tidak ada data" : angka1(md)}`);
     tampilkanTip(cx, cy, `${v === null ? "–" : angka1(v)} µg/m³`, ` ${namaDaerah}, ${tahun[i]}. Median nasional ${md === null ? "–" : angka1(md)}`);
   };
   area.addEventListener("pointermove", (e) => {
@@ -111,9 +126,10 @@ export function garisTren(wadah: HTMLElement, tahun: number[], daerah: (number |
   area.addEventListener("pointerleave", lepas);
   area.addEventListener("blur", lepas);
   area.addEventListener("keydown", (e) => {
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    const geser: Record<string, number> = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, Home: -Infinity, End: Infinity };
+    if (!(e.key in geser)) return;
     e.preventDefault();
-    const i = Math.max(0, Math.min(tahun.length - 1, fokusI + (e.key === "ArrowRight" ? 1 : -1)));
+    const i = Math.max(0, Math.min(tahun.length - 1, fokusI + geser[e.key]));
     const r = svg.getBoundingClientRect();
     tunjuk(i, r.left + (x(i) / W) * r.width, r.top + 20);
   });
