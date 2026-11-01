@@ -21,17 +21,14 @@ describe("data PM2.5", () => {
   });
 
   it("tidak ada nilai kosong, negatif, atau mustahil (penanda laut -999 sudah dibuang)", () => {
+    // Dikumpulkan dulu lalu dicek sekali: 180 ribu panggilan expect terlalu lambat dan kadang lewat batas waktu.
+    const salah: string[] = [];
     for (const id of ids) {
-      for (const x of tahunan.nilai[id]) {
-        expect(x, id).not.toBeNull();
-        expect(x!, id).toBeGreaterThan(0);
-        expect(x!, id).toBeLessThan(2000); // < 200 µg/m³ rata-rata setahun
-      }
-      for (const x of bulanan.nilai[id]) {
-        expect(x!, id).toBeGreaterThan(0);
-        expect(x!, id).toBeLessThan(10000); // < 1000 µg/m³ rata-rata sebulan
-      }
+      // < 200 µg/m³ rata-rata setahun, < 1000 µg/m³ rata-rata sebulan
+      tahunan.nilai[id].forEach((x, t) => x !== null && x > 0 && x < 2000 ? null : salah.push(`${id} tahun ${t}: ${x}`));
+      bulanan.nilai[id].forEach((x, b) => x !== null && x > 0 && x < 10000 ? null : salah.push(`${id} bulan ${b}: ${x}`));
     }
+    expect(salah).toEqual([]);
   });
 
   it("rata-rata 12 bulan mendekati nilai tahunan", () => {

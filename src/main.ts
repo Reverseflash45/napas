@@ -94,14 +94,8 @@ $("legenda").innerHTML = LABEL_KELAS.map((l, k) => `<li><i style="background:${w
 
 /* ---------- peta & tahun ---------- */
 let tahunKini = AKHIR;
-const peta = buatPeta(
-  $("wadah-peta"),
-  topo,
-  (id) => daerahDari.get(id)?.nama ?? id,
-  (id) => nilaiTahun(id, tahunKini),
-  () => String(TAHUN[tahunKini]),
-  (id) => pilihDaerah(id, true),
-);
+// Peta besar dan tabel 514 baris ada di bawah layar pertama: dibuat saat bagiannya hampir terlihat (lihat "mulai").
+let peta: ReturnType<typeof buatPeta> | null = null;
 
 const petaMini = buatPeta(
   $("peta-mini"),
@@ -114,13 +108,13 @@ const petaMini = buatPeta(
 petaMini.warnai((id) => nilaiTahun(id, AKHIR));
 
 function gambarTahun() {
-  peta.warnai((id) => nilaiTahun(id, tahunKini));
+  peta?.warnai((id) => nilaiTahun(id, tahunKini));
   $("label-tahun").textContent = String(TAHUN[tahunKini]);
   const memenuhi = hitung(tahunKini, (v) => v <= PEDOMAN_WHO);
   const lewat = hitung(tahunKini, (v) => v > BAKU_NASIONAL);
   $("ringkas-peta").textContent =
     `${TAHUN[tahunKini]}: median ${angka1(medianTahunan[tahunKini])} µg/m³. ${memenuhi} daerah memenuhi pedoman WHO, ${lewat} melewati baku mutu nasional.`;
-  gambarTabel();
+  if (peta) gambarTabel();
 }
 
 function gambarTabel() {
@@ -252,7 +246,7 @@ function pilihDaerah(id: string, gulir: boolean) {
   saran.hidden = true;
   kotak.setAttribute("aria-expanded", "false");
   history.replaceState(null, "", `#daerah=${id}`);
-  peta.pilih(id);
+  peta?.pilih(id);
   petaMini.pilih(id);
   gambarKartu();
   if (gulir) kartu.scrollIntoView({ block: "start" });
@@ -328,8 +322,41 @@ function gambarCerita() {
 }
 
 /* ---------- mulai ---------- */
+// Bagian di bawah layar pertama baru digambar saat hampir terlihat, supaya pembukaan halaman tidak macet di HP.
+const tampak = new Set<() => void>();
+const bilaTampak = (gambar: () => void) => {
+  if (tampak.has(gambar)) gambar();
+};
+function amati(id: string, gambar: () => void) {
+  const mulai = () => {
+    tampak.add(gambar);
+    gambar();
+  };
+  if (!("IntersectionObserver" in window)) return mulai();
+  const io = new IntersectionObserver(
+    (isi) => {
+      if (!isi.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      mulai();
+    },
+    { rootMargin: "250px 0px" },
+  );
+  io.observe($(id));
+}
 gambarTahun();
-gambarCerita();
+amati("wadah-peta", () => {
+  peta = buatPeta(
+    $("wadah-peta"),
+    topo,
+    (id) => daerahDari.get(id)?.nama ?? id,
+    (id) => nilaiTahun(id, tahunKini),
+    () => String(TAHUN[tahunKini]),
+    (id) => pilihDaerah(id, true),
+  );
+  gambarTahun();
+  if (terpilih) peta.pilih(terpilih);
+});
+amati("asap", gambarCerita);
 const awal = new URLSearchParams(location.hash.slice(1)).get("daerah");
 if (awal && daerahDari.has(awal)) pilihDaerah(awal, false);
 
@@ -340,7 +367,7 @@ window.addEventListener("resize", () => {
   lebarLalu = window.innerWidth;
   clearTimeout(jedaUkur);
   jedaUkur = window.setTimeout(() => {
-    gambarCerita();
+    bilaTampak(gambarCerita);
     if (terpilih) {
       garisTren($("grafik-tren"), TAHUN, tahunan.nilai[terpilih].map(dariSimpan), medianTahunan, daerahDari.get(terpilih)!.nama);
       gambarKalender();
