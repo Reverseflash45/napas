@@ -19,6 +19,10 @@
     <link rel="canonical" href="https://napas.raffstw.my.id/" />
     <meta name="theme-color" content="#c9d8e2" />
     <link rel="icon" href="/ikon.svg" type="image/svg+xml" />
+    <!-- tautan langsung ke daerah: pesan ruang kartu sebelum data datang supaya isi di bawahnya tidak terdorong -->
+    <script>if (/daerah=/.test(location.hash)) document.documentElement.classList.add("ada-daerah");</script>
+    <link rel="preload" href="/node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/node_modules/@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <header class="kepala">
@@ -54,7 +58,7 @@
           />
           <ul class="saran" id="saran" role="listbox" hidden></ul>
         </div>
-        <ul class="pintasan" id="pintasan" aria-label="Contoh daerah"></ul>
+        <ul class="pintasan" id="pintasan" aria-label="Contoh daerah"><li><button type="button" data-pilih="kota-jakarta-pusat">Jakarta Pusat</button></li><li><button type="button" data-pilih="kota-surabaya">Surabaya</button></li><li><button type="button" data-pilih="kota-medan">Medan</button></li><li><button type="button" data-pilih="kota-kediri">Kediri</button></li><li><button type="button" data-pilih="kota-palangka-raya">Palangka Raya</button></li><li><button type="button" data-pilih="kota-jayapura">Jayapura</button></li></ul>
         </div>
         <figure>
           <div id="peta-mini"></div>
@@ -67,7 +71,7 @@
 
       <section class="bagian" id="peta" aria-labelledby="judul-peta">
         <h2 id="judul-peta">Dari tahun ke tahun, udaranya makin keruh</h2>
-        <p class="teks" id="teks-peta"></p>
+        <p class="teks" id="teks-peta">Pada 1998 masih ada 65 kabupaten/kota yang rata-rata PM2.5-nya memenuhi pedoman WHO (5 µg/m³). Setelah 2010 tidak ada lagi. Tahun 2024, 264 dari 514 daerah bahkan melewati baku mutu nasional 15 µg/m³. Median kabupaten/kota naik dari 8,4 ke 15,2 µg/m³.</p>
         <div class="kendali">
           <button type="button" class="tombol-putar" id="putar"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" /></svg><span>Putar 1998–2024</span></button>
           <div class="penggeser">
@@ -76,9 +80,9 @@
             <output id="label-tahun" for="tahun">2024</output>
           </div>
         </div>
-        <ul class="legenda" id="legenda" aria-label="Kelas rata-rata PM2.5 (µg/m³)"></ul>
+        <ul class="legenda" id="legenda" aria-label="Kelas rata-rata PM2.5 (µg/m³)"><li><i style="background:var(--k0)"></i>≤ 5<small>memenuhi pedoman WHO</small></li><li><i style="background:var(--k1)"></i>5–10<small>target antara WHO ke-4</small></li><li><i style="background:var(--k2)"></i>10–15<small>baku mutu tahunan Indonesia</small></li><li><i style="background:var(--k3)"></i>15–25<small>target antara WHO ke-2</small></li><li><i style="background:var(--k4)"></i>25–35<small>target antara WHO ke-1</small></li><li><i style="background:var(--k5)"></i>35–75<small>di atas semua target WHO</small></li><li><i style="background:var(--k6)"></i>&gt; 75<small>asap pekat</small></li></ul>
         <div class="wadah-peta" id="wadah-peta"></div>
-        <p class="ringkas-peta" id="ringkas-peta"></p>
+        <p class="ringkas-peta" id="ringkas-peta">2024: median 15,2 µg/m³. 0 daerah memenuhi pedoman WHO, 264 melewati baku mutu nasional.</p>
         <details class="tabel-peta">
           <summary>Lihat semua 514 daerah sebagai tabel</summary>
           <div class="gulir-tabel"><table id="tabel"></table></div>

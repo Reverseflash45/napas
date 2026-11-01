@@ -650,6 +650,17 @@ td button {
   margin: 28px 0 0;
 }
 /* peta kecil di atas kartu terang supaya rona asap terbaca di atas langit */
+/* pesan tempat peta (viewBox 1000×420) sebelum SVG-nya dibuat */
+#peta-mini:empty::before,
+.wadah-peta:empty::before {
+  content: "";
+  display: block;
+  aspect-ratio: 1000 / 420;
+}
+.ada-daerah #daerah[hidden]:empty {
+  display: block;
+  min-height: 100vh;
+}
 #peta-mini {
   padding: 10px;
   border-radius: 16px;
