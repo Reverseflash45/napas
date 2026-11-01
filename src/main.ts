@@ -20,6 +20,7 @@ import {
   tambahanUmur,
 } from "./inti";
 import { buatPeta } from "./peta";
+import { htmlTetangga } from "./tetangga";
 
 type Tahunan = { tahun: number[]; nilai: Record<string, (number | null)[]> };
 type Bulanan = { mulai: string; nilai: Record<string, (number | null)[]> };
@@ -279,6 +280,7 @@ function gambarKartu() {
         <li><b>${selisih >= 0 ? "Naik" : "Turun"} ${angka1(Math.abs(selisih))} µg/m³ sejak ${TAHUN[0]}</b><small>${TAHUN[0]}: ${angka1(v0)} µg/m³</small></li>
       </ul>
       <div class="aksi-daerah"><button type="button" class="tombol-teks" id="salin">Salin tautan</button><a href="#peta" class="tombol-teks">Lihat di peta</a></div>
+      ${htmlTetangga(terpilih, d.nama, "napas")}
     </div>
     <div class="kanan-daerah">
       <div>

@@ -339,6 +339,22 @@ h3 {
 .tombol-teks:hover {
   color: var(--tinta);
 }
+.tetangga {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--garis);
+  color: var(--redup);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 46ch;
+}
+.tetangga a {
+  color: var(--tinta-2);
+  text-underline-offset: 3px;
+}
+.tetangga a:hover {
+  color: var(--tinta);
+}
 .kanan-daerah {
   min-width: 0;
   display: grid;
